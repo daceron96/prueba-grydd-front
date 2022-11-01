@@ -1,41 +1,35 @@
 import React, { useState } from "react";
 import { urlBase } from "../../helpers/config";
-import {useNavigate} from 'react-router-dom';
 import axios from "axios";
 import Error from "../helpers/Error";
+import {createCompany} from '../../app/services/companyService';
 
-export default function Form() {
+export default function Form( {handleView, handleAddCompnay}) {
   const [errors, setErrors] = useState({});
   const [company, setCompany] = useState({});
   const [address, setAddress] = useState({});
   const [location, setLocation] = useState({});
-  const navigate = useNavigate()
   const errorStyle = () => {
     return `is-invalid`;
   };
 
   const handleSubmit = (e) => {
-    const createCompany = async () => {
-      await axios
-        .post(`${urlBase}company/`, {
-          company,
-          address,
-          location,
-        })
-        .then((response) => {
-          navigate(`/company/list`)
-        })
-        .catch((response) => {
-          console.log(response.response.data);
-          setErrors({ ...response.response.data });
-        });
+    const sendData = async () => {
+      try{
+        const {data} = await createCompany(company,address,location)
+        handleAddCompnay(data)
+        handleView('list')
+      }catch(error){
+        console.log(error.response.data)
+        setErrors(error.response.data)
+      }
     };
 
-    createCompany();
+    sendData();
   };
 
   return (
-    <form className="mt-3 row g-3">
+    <form className="row g-3">
       {/* Datos de empresa */}
       <h6>Datos de la empresa</h6>
       <div className="col-md-6">

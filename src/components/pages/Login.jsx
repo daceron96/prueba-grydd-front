@@ -4,38 +4,33 @@ import { urlBase, setAuthToken } from "../../helpers/config";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setDataUser, setLogin } from "../../app/slices/userSlice";
+import {login} from '../../app/services/authService'
+
 
 export default function Login() {
   //dispatch
   const dispatch = useDispatch();
-  const navitate = useNavigate();
+  const navigate = useNavigate();
   //useStates
   const [data, setData] = useState({});
   const [error, setError] = useState({});
 
-  const handleSubmit = () => {
-    const login = async () => {
-      await axios
-        .post(`${urlBase}login/`, data)
-        .then((response) => {
-          const { token, user } = response.data;
-          setAuthToken(token, user.role);
-          dispatch(setDataUser(user.role));
-          dispatch(setLogin(true));
-
-          if(user.role === 'admin'){
-            navitate('/company/list')
-          }
-
-        })
-        .catch((response) => {
-          console.log(response);
-          setError({ message: response.response.data.error });
-        });
-    };
-
-    login();
-  };
+  const handleLogin = async (event) =>{
+    event.preventDefault()
+    try{
+      const user = await login(data)
+      dispatch(setLogin(true))
+      setAuthToken(user.token)
+      localStorage.setItem(
+        'user', JSON.stringify(user.user)
+      )
+      dispatch(setDataUser(user.user))
+      navigate('/company/list')
+    }
+    catch({response}){
+      setError(response.data)
+    }
+  }
 
   return (
     <>
@@ -45,10 +40,10 @@ export default function Login() {
             <div className="card">
               <div className="card-body">
                 <h5 className="card-title mt-3">Inicio de sesión</h5>
-                <form className="mt-4">
+                <form className="mt-4" onSubmit={handleLogin} >
                   <div className="form-floating  mb-3">
                     <input
-                      type="email"
+                      type="text"
                       className="form-control"
                       placeholder="Número de documento"
                       onChange={(e) =>
@@ -68,16 +63,16 @@ export default function Login() {
                     />
                     <label>Contraseña</label>
                   </div>
-                  {error.message && (
+                  {error.error && (
                     <div className="alert alert-danger" role="alert">
-                      {error.message}
+                      {error.error}
                     </div>
                   )}
                   <div className="d-grid gap-2 mx-auto">
                     <button
-                      type="button"
+                      type="submit"
                       className="btn btn-primary mb-4"
-                      onClick={() => handleSubmit()}
+                      // onClick={() => handleLogin}
                     >
                       Iniciar sesión
                     </button>

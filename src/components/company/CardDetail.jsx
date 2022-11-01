@@ -6,10 +6,13 @@ export default function CardDetail({detail}) {
   const navigate = useNavigate();
 
   const handleDetail = (nit) => {
-    // navigate(`/company/point/${id}`)
     navigate(`/company/point/list/${nit}`)
-    // 
   }
+
+  const handleList = (nit) =>{
+    navigate(`/users/list/${nit}`)
+  }
+
   return (
     
         <div className="col-md-6 col-xl-4 mb-3"  >
@@ -32,6 +35,7 @@ export default function CardDetail({detail}) {
                 <li className="list-group-item "><strong>Correo : </strong>{detail.email}</li>
               </ul>
               <button className='btn btn-outline-primary btn-sm text-center' onClick={() => handleDetail(detail.nit)}>Ver Puntos</button>
+              <button className='btn btn-outline-primary btn-sm text-center' onClick={() => handleList(detail.nit)}>Ver Empleados</button>
             </div>
           </div>
         </div>

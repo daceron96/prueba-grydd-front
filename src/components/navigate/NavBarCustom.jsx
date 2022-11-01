@@ -34,11 +34,7 @@ function NavBarCustom() {
                 Empresas
               </Link>
             </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/users/list">
-                Usuarios
-              </Link>
-            </li>
+            
             {login? 
               <li className="nav-item">
               <Link className="nav-link" to="/login" onClick={() => handleLogout()}>

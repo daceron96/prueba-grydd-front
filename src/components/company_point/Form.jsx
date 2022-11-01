@@ -1,35 +1,29 @@
 import React, { useState } from "react";
 import Error from "../helpers/Error";
-import { useNavigate } from "react-router-dom";
 
-import axios from "axios";
-import { urlBase } from "../../helpers/config";
+import {createPointCompany} from '../../app/services/companyService';
 
-export default function Form({company}) {
+export default function Form({company, handleAddPoint, handleView}) {
   const [errors, setErrors] = useState({});
   const [point, setPoint] = useState({ company: company });
   const [address, setAddress] = useState({});
-  const navigate = useNavigate()
+
   const errorStyle = () => {
     return `is-invalid`;
   };
   const handleSubmit = (e) => {
-    const createCompany = async () => {
-      await axios
-        .post(`${urlBase}point/`, {
-          address,
-          point,
-        })
-        .then((response) => {
-          navigate(`/company/point/list/${company}`)
-        })
-        .catch((response) => {
-          console.log(response.response.data);
-          setErrors({ ...response.response.data });
-        });
-    };
-
-    createCompany();
+    const sendData = async () =>{
+      try{
+        const {data} = await createPointCompany(address,point)
+        console.log(data);
+        handleAddPoint(data)
+        handleView('list')
+      }catch(error){
+        console.log(error)
+        setErrors(error.response.data)
+      }
+    }
+    sendData()
   };
   return (
     <form className="mt-3 row g-3">

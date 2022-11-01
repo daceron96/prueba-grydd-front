@@ -1,12 +1,10 @@
 import React, { useState } from "react";
 import Error from "../helpers/Error";
-import axios from "axios";
-import { urlBase } from "../../helpers/config";
+import {createPerson} from '../../app/services/personService';
 import { useParams } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-const Form = () => {
+
+const Form = ({handleView, handleAddPerson}) => {
   const params = useParams();
-  const navigate = useNavigate();
   const [errors, setErrors] = useState({});
   const [person, setPerson] = useState({ company: params.nit });
   const [address, setAddress] = useState({});
@@ -17,22 +15,18 @@ const Form = () => {
   };
 
   const handleSubmit = (e) => {
-    const createCompany = async () => {
-      await axios
-        .post(`${urlBase}person/`, {
-          person,
-          address,
-          location,
-        })
-        .then((response) => {
-          navigate(`/company/point/list/${params.nit}`);
-        })
-        .catch((response) => {
-          setErrors({ ...response.response.data });
-        });
-    };
+    const sendData = async() =>{
+      try{
+        const {data} = await createPerson(person,address,location)
+        handleAddPerson(data)
+        handleView('list')
+      }catch(error){
+        console.log(error);
+        setErrors(error.response.data)
+      }
+    }
 
-    createCompany();
+    sendData();
   };
 
   return (
