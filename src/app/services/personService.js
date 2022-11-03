@@ -17,3 +17,8 @@ export const createPerson = (person,address,location) =>{
 
   return data
 }
+
+export const validateAccess = (params) => {
+  const data = axios.get(`${urlBase}check-in/`,{params})
+  return data
+}

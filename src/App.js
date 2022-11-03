@@ -10,6 +10,7 @@ import {setAuthToken} from './helpers/config'
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import {setDataUser} from './app/slices/userSlice'
+import ScannerQr from './components/company_point/ScannerQr';
 
 function App() {
   const dispatch = useDispatch()
@@ -40,6 +41,7 @@ function App() {
             <Route path="/users/detail" element={<PersonDetail />}></Route> 
           </Routes>
         </BrowserRouter>
+        {/* <ScannerQr /> */}
       </div>
   );
 }

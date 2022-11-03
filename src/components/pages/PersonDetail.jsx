@@ -4,9 +4,10 @@ import QRCode from "react-qr-code";
 // import ReadQr from '../users/ReadQr'
 export default function PersonDetail() {
   const { user } = useSelector((state) => state.user);
-  const [show, setShow] = useState(true);
+  const [error, setError] = useState('')
   const [data, setData] = useState({});
   useEffect(() => {
+    
     navigator.geolocation.getCurrentPosition((position) => {
       setData({
         ...data,

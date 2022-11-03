@@ -9,6 +9,7 @@ import { getPointCompanyList } from "../../app/services/companyService";
 import CardDetail from "../company_point/CardDetail";
 import FormAccess from "../company_point/FormAccess";
 import DetailAccessHour from "../company_point/DetailAccessHour";
+import FormAccessPerson from '../company_point/FormAccessPerson';
 import Form from "../company_point/Form";
 
 export default function CompanyPoint() {
@@ -17,6 +18,7 @@ export default function CompanyPoint() {
   const [title, setTitle] = useState("Lista de puntos");
   const [viewForm, setViewForm] = useState(false);
   const [viewDetail, setViewDetail] = useState(false);
+  const [viewFormAccess, setviewFormAccess] = useState(false);
   const [idPoint, setIdPoint] = useState(null);
 
   const params = useParams();
@@ -56,6 +58,8 @@ export default function CompanyPoint() {
     setView(view);
   };
 
+  
+
   const handleAddPoint = (data) => {
     const list = [...pointsList];
     list.push(data);
@@ -78,12 +82,20 @@ export default function CompanyPoint() {
         </div>
         <div className="col-md-4 d-flex justify-content-end align-items-center">
           {view === "list" && user.role === "admin" && (
-            <button
-              className="btn btn-primary"
-              onClick={() => handleView("form")}
-            >
-              Registrar Punto
-            </button>
+            <div>
+              <button
+                className="btn btn-primary me-1"
+                onClick={() => setviewFormAccess(true)}
+              >
+                Ingresar
+              </button>
+              <button
+                className="btn btn-primary"
+                onClick={() => handleView("form")}
+              >
+                Registrar Punto
+              </button>
+            </div>
           )}
         </div>
       </div>
@@ -93,10 +105,17 @@ export default function CompanyPoint() {
           view === "list" ? (
             pointsList.length !== 0 ? (
               pointsList.map((detail, index) => {
-                return <CardDetail key={index} detail={detail} showForm={() => setViewForm(true)} setIdPoint={setIdPoint} showDetail={() => setViewDetail(true)} />;
+                return (
+                  <CardDetail
+                    key={index}
+                    detail={detail}
+                    showForm={() => setViewForm(true)}
+                    setIdPoint={setIdPoint}
+                    showDetail={() => setViewDetail(true)}
+                  />
+                );
               })
-            )
-            : (
+            ) : (
               <h6>No hay puntos registrados</h6>
             )
           ) : (
@@ -109,11 +128,27 @@ export default function CompanyPoint() {
         ) : (
           <h6>No cuentas con los permisos correspondientes</h6>
         )}
-        
-
       </div>
-      {viewForm && <FormAccess hideForm={() => setViewForm(false)} idPoint={idPoint} setIdPoint={setIdPoint} />}
-      {viewDetail && <DetailAccessHour hideDetail = {() => setViewDetail(false)} idPoint={idPoint} setIdPoint={setIdPoint}/>}
+      {viewForm && (
+        <FormAccess
+          hideForm={() => setViewForm(false)}
+          idPoint={idPoint}
+          setIdPoint={setIdPoint}
+        />
+      )}
+      {viewDetail && (
+        <DetailAccessHour
+          hideDetail={() => setViewDetail(false)}
+          idPoint={idPoint}
+          setIdPoint={setIdPoint}
+        />
+      )}
+      {viewFormAccess && (
+        <FormAccessPerson
+          hideForm={() => setviewFormAccess(false)}
+          
+        />
+      )}
     </div>
   );
 }
