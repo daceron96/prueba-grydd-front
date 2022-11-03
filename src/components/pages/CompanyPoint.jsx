@@ -8,13 +8,17 @@ import { getPointCompanyList } from "../../app/services/companyService";
 
 import CardDetail from "../company_point/CardDetail";
 import FormAccess from "../company_point/FormAccess";
+import DetailAccessHour from "../company_point/DetailAccessHour";
 import Form from "../company_point/Form";
 
 export default function CompanyPoint() {
   const [pointsList, setPointsList] = useState([]);
   const [view, setView] = useState("list");
   const [title, setTitle] = useState("Lista de puntos");
-  
+  const [viewForm, setViewForm] = useState(false);
+  const [viewDetail, setViewDetail] = useState(false);
+  const [idPoint, setIdPoint] = useState(null);
+
   const params = useParams();
   const { user } = useSelector((state) => state.user);
 
@@ -89,7 +93,7 @@ export default function CompanyPoint() {
           view === "list" ? (
             pointsList.length !== 0 ? (
               pointsList.map((detail, index) => {
-                return <CardDetail key={index} detail={detail} />;
+                return <CardDetail key={index} detail={detail} showForm={() => setViewForm(true)} setIdPoint={setIdPoint} showDetail={() => setViewDetail(true)} />;
               })
             )
             : (
@@ -108,7 +112,8 @@ export default function CompanyPoint() {
         
 
       </div>
-        {user.role === 'admin' ? <FormAccess /> : ''}
+      {viewForm && <FormAccess hideForm={() => setViewForm(false)} idPoint={idPoint} setIdPoint={setIdPoint} />}
+      {viewDetail && <DetailAccessHour hideDetail = {() => setViewDetail(false)} idPoint={idPoint} setIdPoint={setIdPoint}/>}
     </div>
   );
 }

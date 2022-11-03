@@ -1,18 +1,50 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Error from "../helpers/Error";
 import {createPerson} from '../../app/services/personService';
+import {getPointCompanyList} from '../../app/services/companyService';
+import {getListAccess} from '../../app/services/accessHourService';
 import { useParams } from "react-router-dom";
 
 const Form = ({handleView, handleAddPerson}) => {
   const params = useParams();
   const [errors, setErrors] = useState({});
-  const [person, setPerson] = useState({ company: params.nit });
+  const [person, setPerson] = useState({});
   const [address, setAddress] = useState({});
   const [location, setLocation] = useState({});
+  const [points, setPoints] = useState([]);
+  const [access, setAccess] = useState([]);
 
   const errorStyle = () => {
     return `is-invalid`;
   };
+
+  useEffect(() => {
+    const getList = async() =>{
+      try{
+        const {data} = await getPointCompanyList(params)
+        setPoints([...data])
+      }catch(error){
+        console.log(error);
+      }
+    }
+    getList()
+  }, []);
+
+  useEffect(() => {
+    
+    const getList = async() =>{
+      
+        const {data} = await getListAccess(person.companyPoint)
+        setAccess([...data])
+    }
+    if(person.companyPoint !== undefined && person.companyPoint !== 'undefined'){
+      getList()
+    }else{
+      setAccess([])
+      setPerson({...person, accessHour : undefined})
+    }
+
+  }, [person.companyPoint]);
 
   const handleSubmit = (e) => {
     const sendData = async() =>{
@@ -125,6 +157,38 @@ const Form = ({handleView, handleAddPerson}) => {
             </select>
             <label>Seleciona el tipo de usuario</label>
             {errors.role && <Error message={errors.role[0]} />}
+          </div>
+        </div>
+        <div className="col-md-6">
+          <div className="form-floating">
+            <select
+              className={`form-control ${errors.companyPoint && errorStyle()}`}
+              onChange = {(e) => setPerson({...person, companyPoint : e.target.value})}
+            >
+              <option value='undefined' defaultValue>Abre este menú</option>
+              {points.map((point, index) => {
+                return <option value={point.id} key={`point${index}`}>{point.name} </option>
+              })}
+              
+            </select>
+            <label>Seleciona la sede de acceso</label>
+            {errors.companyPoint && <Error message={errors.companyPoint[0]} />}
+          </div>
+        </div>
+        <div className="col-md-6">
+          <div className="form-floating">
+            <select
+              className={`form-control ${errors.accessHour && errorStyle()}`}
+              onChange = {(e) => setPerson({...person, accessHour : e.target.value})}
+            >
+              <option value='undefined' defaultValue>Abre este menú</option>
+              {access.map((point,index) => {
+                return <option value={point.id} key={`access${index}`}>{point.name}</option>
+              })}
+              
+            </select>
+            <label>Seleciona el horario de acceso</label>
+            {errors.accessHour && <Error message={errors.accessHour[0]} />}
           </div>
         </div>
         {/* Datos de dirrecion */}

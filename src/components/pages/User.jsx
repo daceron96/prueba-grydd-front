@@ -13,7 +13,7 @@ export default function User() {
   const { user, login } = useSelector((state) => state.user);
   const navigate = useNavigate();
   const params = useParams();
-
+  console.log(user)
   const handleClick = () => {
     if (view === "list") {
       navigate("/company/list");

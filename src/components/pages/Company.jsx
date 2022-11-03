@@ -17,7 +17,6 @@ export default function Company() {
   const [view, setView] = useState("list");
   const [title, setTitle] = useState("Lista de empresas");
   const { user, login } = useSelector((state) => state.user);
-
   const handleView = (view) => {
     if (view === "list") {
       setTitle("Lista de empresas");

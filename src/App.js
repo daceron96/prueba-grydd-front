@@ -1,11 +1,11 @@
 import "./App.css";
-
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import NavBarCustom from "./components/navigate/NavBarCustom";
 import Company from "./components/pages/Company";
 import Login from "./components/pages/Login";
 import CompanyPoint from "./components/pages/CompanyPoint";
 import UserList from "./components/pages/User";
+import PersonDetail from './components/pages/PersonDetail'
 import {setAuthToken} from './helpers/config'
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
@@ -27,17 +27,15 @@ function App() {
           <NavBarCustom />
 
           <Routes>
-            {/* Company path */}
             <Route path="/company/list" element={<Company />}></Route>
             <Route path="/login" element={<Login />}></Route>
-            {/* point path */}
             <Route
-              path="/company/point/list/:id"
+              path="/company/point/list/:nit"
               element={<CompanyPoint />}
             ></Route>
             
-            {/* path users */}
             <Route path="/users/list/:nit" element={<UserList />}></Route>
+            <Route path="/users/detail" element={<PersonDetail />}></Route> 
           </Routes>
         </BrowserRouter>
       </div>

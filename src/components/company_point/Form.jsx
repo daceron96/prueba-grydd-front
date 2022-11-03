@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import Error from "../helpers/Error";
+import {useParams} from 'react-router-dom'
 
 import {createPointCompany} from '../../app/services/companyService';
 
-export default function Form({company, handleAddPoint, handleView}) {
+export default function Form({handleAddPoint, handleView}) {
+  const params = useParams()
   const [errors, setErrors] = useState({});
-  const [point, setPoint] = useState({ company: company });
+  const [point, setPoint] = useState({ company: params.nit });
   const [address, setAddress] = useState({});
 
   const errorStyle = () => {

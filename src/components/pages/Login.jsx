@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
-import { urlBase, setAuthToken } from "../../helpers/config";
+import { setAuthToken } from "../../helpers/config";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setDataUser, setLogin } from "../../app/slices/userSlice";
@@ -25,7 +24,10 @@ export default function Login() {
         'user', JSON.stringify(user.user)
       )
       dispatch(setDataUser(user.user))
-      navigate('/company/list')
+      
+      user.user.role === 'admin' ?(
+        navigate('/company/list')
+      ):(navigate('/users/detail'))
     }
     catch({response}){
       setError(response.data)

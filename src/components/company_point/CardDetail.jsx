@@ -1,7 +1,17 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-export default function CardDetail({ detail }) {
+export default function CardDetail({ detail, setIdPoint, showForm, showDetail }) {
+
+  const handleClickForm = () =>{
+    setIdPoint(detail.id)
+    showForm()
+  }
+
+  const handleShow = () => {
+    setIdPoint(detail.id)
+    showDetail()
+  }
 
   return (
     <div className="col-md-6 col-xl-4 mb-3">
@@ -37,11 +47,10 @@ export default function CardDetail({ detail }) {
               <strong>Código postal: </strong> {detail.address.postalCode}
             </li>
           </ul>
-          <button className="btn btn-outline-primary">Ver horarios</button>
+          <button className="btn btn-outline-primary" onClick={() => handleShow()} >Ver horarios</button>
           <button
             className="btn btn-outline-primary"
-            data-bs-toggle="modal"
-            data-bs-target="#modal-form"
+            onClick={() => handleClickForm()}
           >
             Nuevo horario
           </button>

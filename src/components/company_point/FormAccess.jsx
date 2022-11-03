@@ -2,34 +2,42 @@ import React, { useState } from "react";
 import { createAccessHour } from "../../app/services/accessHourService";
 import Error from "../helpers/Error";
 
-const FormAccess = (id) => {
-  
-  const [accessHour, setAccessHour] = useState({ companyPoint: id });
+
+const modalStyle = {
+  display : 'block',
+  backgroundColor : 'rgba(0,0,0,0.6)',
+}
+
+const FormAccess = ({hideForm, idPoint, setIdPoint }) => {
+  const [accessHour, setAccessHour] = useState({ companyPoint: idPoint });
   const [errors, setErrors] = useState({});
 
   const errorStyle = () => {
     return `is-invalid`;
   };
 
-  const handleCloseModal = () =>{
-    const element = document.getElementById('modal-form')
+  const handleHideForm  = () =>{
+    setIdPoint(null)
+    hideForm(false)
   }
 
   const handleSubmit = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     const sendData = async () => {
       try {
-        const data = await createAccessHour(accessHour);
-        setErrors({})
+        await createAccessHour(accessHour);
+        setIdPoint(null)
+        handleHideForm()
       } catch (error) {
         setErrors(error.response.data);
       }
     };
-    sendData()
+    sendData();
   };
 
   return (
-    <div className="modal fade" data-bs-backdrop="static" id="modal-form">
+
+    <div className="modal fade show" tabIndex="-1" style={modalStyle}>
       <div className="modal-dialog">
         <div className="modal-content">
           <div className="modal-header">
@@ -37,12 +45,31 @@ const FormAccess = (id) => {
             <button
               type="button"
               className="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
+              onClick={() => handleHideForm()}
             ></button>
           </div>
           <div className="modal-body justify-content-center">
             <form className="mt-3">
+              <div className="row mt-3 align-items-center">
+                <div className="col-5">
+                  <label className="col-form-label">Nombre</label>
+                </div>
+                <div className="col-5">
+                  <input
+                    type="text"
+                    className={`form-control ${
+                      errors.name && errorStyle()
+                    }`}
+                    onChange={(e) =>
+                      setAccessHour({
+                        ...accessHour,
+                        name: e.target.value,
+                      })
+                    }
+                  />
+                  {errors.startTime && <Error message={errors.startTime[0]} />}
+                </div>
+              </div>
               <div className="row mt-3 align-items-center">
                 <div className="col-5">
                   <label className="col-form-label">Hora de inicio</label>
@@ -50,9 +77,14 @@ const FormAccess = (id) => {
                 <div className="col-5">
                   <input
                     type="time"
-                    className={`form-control ${errors.startTime && errorStyle()}`}
+                    className={`form-control ${
+                      errors.startTime && errorStyle()
+                    }`}
                     onChange={(e) =>
-                      setAccessHour({ ...accessHour, startTime: e.target.value })
+                      setAccessHour({
+                        ...accessHour,
+                        startTime: e.target.value,
+                      })
                     }
                   />
                   {errors.startTime && <Error message={errors.startTime[0]} />}
@@ -78,7 +110,7 @@ const FormAccess = (id) => {
                 <button
                   type="button"
                   className="btn btn-outline-secondary"
-                  onClick={() => handleCloseModal()}
+                  onClick={() => handleHideForm()}
                 >
                   Cerrar
                 </button>
@@ -94,6 +126,7 @@ const FormAccess = (id) => {
         </div>
       </div>
     </div>
+    
   );
 };
 
