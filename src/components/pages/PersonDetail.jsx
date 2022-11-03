@@ -28,7 +28,7 @@ export default function PersonDetail() {
           />
         </div>
       )}
-      
+      <p>{JSON.stringify(data)}</p>
     </>
   );
 }

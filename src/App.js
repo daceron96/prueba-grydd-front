@@ -16,8 +16,10 @@ function App() {
   useEffect(() => {
     const token = localStorage.getItem('token');
     const user = JSON.parse(localStorage.getItem('user'))
+    if(user !== null){
+      dispatch(setDataUser(user))
+    }
     setAuthToken(token)
-    dispatch(setDataUser(user))
     
   }, []);
 
